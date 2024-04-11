@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = {version = "0.13.2", features = [
+bevy = {version = "0.12.1", features = [
     "animation",
     "bevy_asset",
     "bevy_gilrs",
@@ -20,17 +20,17 @@ bevy = {version = "0.13.2", features = [
     "multi-threaded",
     "png",
     "hdr",
-    "x11",
+    "wayland",
     "bevy_gizmos",
     "tonemapping_luts",
     "default_font",
     "webgl2",
 ] }
-bevy_asset_loader = "0.20.0"
-bevy_render = "0.13.2"
+bevy_asset_loader = "0.19.1"
+bevy_render = "0.12.1"
 catppuccin = "2.2.0"
-image = { version = "0.25.1", default-features = false }
-winit = { version = "0.29.15", default-features = false }
+image = { version = "0.24", default-features = false }
+winit = { version = "0.28.7", default-features = false }
 
 [lints.clippy]
 nursery = "deny"

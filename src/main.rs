@@ -7,6 +7,7 @@ use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy::winit::WinitWindows;
 use winit::window::Icon;
+use jan_furry_game::GamePlugin;
 
 fn main() {
     App::new()
@@ -23,6 +24,7 @@ fn main() {
                     ..default()
                 })
         )
+        .add_plugins(GamePlugin)
         .add_systems(Startup, set_window_icon)
         .run();
 }
