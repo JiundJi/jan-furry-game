@@ -4,7 +4,6 @@
 use std::io::Cursor;
 use bevy::asset::AssetMetaCheck;
 use bevy::prelude::*;
-use bevy::transform::commands;
 use bevy::window::PrimaryWindow;
 use bevy::winit::WinitWindows;
 use winit::window::Icon;

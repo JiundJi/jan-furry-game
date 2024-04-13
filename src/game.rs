@@ -8,16 +8,12 @@ pub struct Game {
     start_time: SystemTime,
 }
 
-impl Game {
-    pub fn new(m: Player) -> Game {
-        let mut players: Vec<Player> = vec![];
-        players.push(m);
-
-        Game {
-            players,
+impl Default for Game {
+    fn default() -> Self {
+        Self {
+            players: vec![],
             creation_time: SystemTime::now(),
             start_time: SystemTime::now(),
         }
-
     }
 }

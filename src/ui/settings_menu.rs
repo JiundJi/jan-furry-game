@@ -71,7 +71,7 @@ fn click_exit(
         match *interaction {
             Interaction::Pressed => { next_state.set(GameState::MainMenu) },
             Interaction::Hovered => { *color = button_colors.hovered.into() },
-            Interaction::None => { *color = button_colors.normal.into() },
+            Interaction::None => { *color = button_colors.red.into() },
         }
     }
 }

@@ -1,3 +1,4 @@
+use bevy::app::AppExit;
 use bevy::prelude::*;
 use crate::GameState;
 use crate::ui::*;
@@ -7,15 +8,20 @@ pub struct StartMenuPlugin;
 impl Plugin for StartMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::MainMenu), setup)
-        .add_systems(Update, click_settings.run_if(in_state(GameState::MainMenu)))
-        .add_systems(Update, click_play.run_if(in_state(GameState::MainMenu)))
+        .add_systems(Update, button_system.run_if(in_state(GameState::MainMenu)))
+        .add_systems(Update, menu_action.run_if(in_state(GameState::MainMenu)))
         .add_systems(OnExit(GameState::MainMenu), cleanup);
     }
-
 }
 
-#[derive(Component)] struct Menu;
+#[derive(Component)] enum MenuButtonAction {
+    Play,
+    Settings,
+    Quit,
+}
 
+#[derive(Component)] struct SelectedOption;
+#[derive(Component)] struct Menu;
 
 fn setup(mut commands: Commands) {
 
@@ -38,7 +44,7 @@ fn setup(mut commands: Commands) {
             let button_colors = ButtonColors::default();
             let general_colors = GeneralUi::default();
 
-            children.spawn((
+            children.spawn(( // * button
                 ButtonBundle {
                     style: Style {
                         width: Val::Vw(12.0),
@@ -51,9 +57,9 @@ fn setup(mut commands: Commands) {
                     background_color: BackgroundColor::from(button_colors.normal),
                     ..Default::default()
                 },
-                button_colors,
+                button_colors, MenuButtonAction::Play
             ))
-            .with_children(|parent| {
+            .with_children(|parent| { // * text
                 parent.spawn(TextBundle::from_section(
                     "Play", 
                     TextStyle {
@@ -68,7 +74,7 @@ fn setup(mut commands: Commands) {
             let button_colors = ButtonColors::default();
             let general_colors = GeneralUi::default();
 
-            children.spawn((
+            children.spawn(( // * button
                 ButtonBundle {
                     style: Style {
                         width: Val::Vw(12.0),
@@ -79,9 +85,9 @@ fn setup(mut commands: Commands) {
                     },
                     ..default()
                 },
-                button_colors,
+                button_colors, MenuButtonAction::Settings
             ))
-            .with_children(|parent| {
+            .with_children(|parent| { // * text
                 parent.spawn(TextBundle::from_section(
                     "Settings",
                     TextStyle {
@@ -95,30 +101,46 @@ fn setup(mut commands: Commands) {
 
 }
 
-fn click_play(
-    mut next_state: ResMut<NextState<GameState>>,
-    mut interaction_query: Query<(&Interaction, &mut BackgroundColor, &ButtonColors), (Changed<Interaction>, With<Button>)>
+fn button_system(
+    mut interaction_query: Query<
+    (&Interaction, &mut BackgroundColor, Option<&SelectedOption>), 
+    (Changed<Interaction>, With<Button>),
+    >,
 ) {
-    for (interaction, mut color, button_colors) in &mut interaction_query {
-        match *interaction {
-            Interaction::Pressed => { next_state.set(GameState::Lobby) },
-            Interaction::Hovered => { *color = button_colors.hovered.into() },
-            Interaction::None => { *color = button_colors.normal.into() },
-        }
+    for (interaction, mut color, selected) in &mut interaction_query {
+        *color = BackgroundColor::from(match (*interaction, selected) {
+            (Interaction::Pressed, _) => ButtonColors::default().normal,
+            (Interaction::Hovered, None) => ButtonColors::default().hovered,
+            (Interaction::Hovered, Some(_)) => ButtonColors::default().clicked,
+            (Interaction::None, _) => ButtonColors::default().normal,
+        })
     }
 }
 
-fn click_settings(
+fn menu_action(interaction_query: Query<
+    (&Interaction, &MenuButtonAction),
+    (Changed<Interaction>, With<Button>),
+    >,
     mut next_state: ResMut<NextState<GameState>>,
-    mut interaction_query: Query<(&Interaction, &mut BackgroundColor, &ButtonColors), (Changed<Interaction>, With<Button>)>,
+    mut exit: EventWriter<AppExit>,
 ) {
-    for (interaction, mut color, button_colors) in &mut interaction_query {
-        match *interaction {
-            Interaction::Pressed => { next_state.set(GameState::Settings) },
-            Interaction::Hovered => { *color = button_colors.hovered.into() },
-            Interaction::None => { *color = button_colors.normal.into() },
+
+    for (interaction, menu_button_action) in &interaction_query {
+        if *interaction == Interaction::Pressed {
+            match menu_button_action {
+                MenuButtonAction::Play => {
+                    next_state.set(GameState::Lobby)
+                },
+                MenuButtonAction::Settings => {
+                    next_state.set(GameState::Settings)
+                },
+                MenuButtonAction::Quit => {
+                    exit.send(AppExit);
+                },
+            }
         }
     }
+
 }
 
 fn cleanup(mut commands: Commands, menu: Query<Entity, With<Menu>>) {

@@ -86,7 +86,11 @@ impl Default for GeneralUi {
 #[derive(Component)]
     pub struct ButtonColors {
         pub normal: Color,
+        pub important: Color,
+        pub green: Color,
+        pub red: Color,
         pub hovered: Color,
+        pub clicked: Color,
 }
 
 impl Default for ButtonColors {
@@ -94,6 +98,10 @@ impl Default for ButtonColors {
         Self {
             normal: Color::hex(FLAVOUR.surface0().hex()).unwrap(),
             hovered: Color::hex(FLAVOUR.overlay0().hex()).unwrap(),
+            important: Color::hex(FLAVOUR.yellow().hex()).unwrap(),
+            green: Color::hex(FLAVOUR.green().hex()).unwrap(),
+            red: Color::hex(FLAVOUR.red().hex()).unwrap(),
+            clicked: Color::hex(FLAVOUR.overlay2().hex()).unwrap(),
         }
     }
 }
