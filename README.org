@@ -9,6 +9,9 @@ and then run
 
 and enjoy your binary presumably as =./result/bin/jan-furry-game=
 
+alternatively, just use [[https://rustup.rs/][cargo]] 
+~cargo run~
+
 * 注意公民
 *The next fullmoon will take place on 24th of April*
 
