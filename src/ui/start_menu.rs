@@ -97,6 +97,33 @@ fn setup(mut commands: Commands) {
                     }
                 ));
             });
+        })
+        .with_children(|children| { // * quit button
+            let button_colors = ButtonColors::default();
+            let general_colors = GeneralUi::default();
+
+            children.spawn(( // * button
+                ButtonBundle {
+                    style: Style {
+                        width: Val::Vw(12.0),
+                        height: Val::Vh(6.0),
+                        justify_content: JustifyContent::Center,
+                        align_items: AlignItems::Center,
+                        ..Default::default()
+                    },
+                    ..default()
+                }, button_colors, MenuButtonAction::Quit
+            ))
+            .with_children(|parent| { // * text
+                parent.spawn(TextBundle::from_section(
+                    "Quit", 
+                    TextStyle {
+                        font_size: 32.0,
+                        color: general_colors.text,
+                        ..Default::default()
+                    }
+                ));
+            });
         });
 
 }
