@@ -59,8 +59,8 @@ impl Default for GeneralUi {
 impl Default for ButtonColors {
     fn default() -> Self {
         Self {
-            normal: Color::hex(FLAVOUR.sapphire().hex()).unwrap(),
-            hovered: Color::hex(FLAVOUR.blue().hex()).unwrap(),
+            normal: Color::hex(FLAVOUR.surface0().hex()).unwrap(),
+            hovered: Color::hex(FLAVOUR.overlay0().hex()).unwrap(),
         }
     }
 }

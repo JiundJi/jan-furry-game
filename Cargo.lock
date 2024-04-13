@@ -970,6 +970,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_text_popup"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "18ce6d0cfb7c51bace9652904cf0313d63dff108f62f98d899787a6c43902b5a"
+dependencies = [
+ "bevy",
+]
+
+[[package]]
 name = "bevy_time"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2098,6 +2107,7 @@ dependencies = [
  "bevy",
  "bevy_asset_loader",
  "bevy_render",
+ "bevy_text_popup",
  "catppuccin",
  "image",
  "winit",

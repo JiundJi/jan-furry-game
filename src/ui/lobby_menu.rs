@@ -35,6 +35,9 @@ fn setup(mut commands: Commands) {
             },
             Menu,
         ))
+        .with_children(|children| {
+            
+        })
         .with_children(|children| { // start button
             let button_colors = ButtonColors::default();
             let general_colors = GeneralUi::default();
@@ -64,9 +67,6 @@ fn setup(mut commands: Commands) {
                     }
                 ));
             });
-        })
-        .with_children(|children| {
-            
         });
 
 }
