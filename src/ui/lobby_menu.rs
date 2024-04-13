@@ -2,13 +2,13 @@ use bevy::prelude::*;
 use crate::GameState;
 use crate::ui::*;
 
-pub struct StartMenuPlugin;
+pub struct LobbyMenuPlugin;
 
-impl Plugin for StartMenuPlugin {
+impl Plugin for LobbyMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::MainMenu), setup)
-        .add_systems(Update, click.run_if(in_state(GameState::MainMenu)))
-        .add_systems(OnExit(GameState::MainMenu), cleanup);
+        app.add_systems(OnEnter(GameState::Lobby), setup)
+        .add_systems(Update, click.run_if(in_state(GameState::Lobby)))
+        .add_systems(OnExit(GameState::Lobby), cleanup);
     }
 
 }
@@ -35,7 +35,7 @@ fn setup(mut commands: Commands) {
             },
             Menu,
         ))
-        .with_children(|children| {
+        .with_children(|children| { // start button
             let button_colors = ButtonColors::default();
             let general_colors = GeneralUi::default();
 
@@ -56,7 +56,7 @@ fn setup(mut commands: Commands) {
             ))
             .with_children(|parent| {
                 parent.spawn(TextBundle::from_section(
-                    "Play", 
+                    "Start", 
                     TextStyle {
                         font_size: 32.0, 
                         color: general_colors.text, 
@@ -64,15 +64,15 @@ fn setup(mut commands: Commands) {
                     }
                 ));
             });
+        })
+        .with_children(|children| {
+            
         });
 
 }
 
-fn click(
-    mut next_state: ResMut<NextState<GameState>>,
-    mut interaction_query: Query<(&Interaction, &mut BackgroundColor, &ButtonColors), (Changed<Interaction>, With<Button>)>
-) {
-    
+fn click() {
+
 }
 
 fn cleanup(mut commands: Commands, menu: Query<Entity, With<Menu>>) {

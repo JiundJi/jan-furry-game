@@ -11,8 +11,8 @@ use crate::asset_loading::AssetLoadingPlugin;
 
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash, Default)]
 pub enum GameState {
-        #[default] Loading,
-        MainMenu,
+        Loading,
+        #[default] MainMenu,
         CreationMenu,
         Lobby,
         InGame,
