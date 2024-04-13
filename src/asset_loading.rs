@@ -2,9 +2,9 @@ use crate::GameState;
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
-pub struct LoadingPlugin;
+pub struct AssetLoadingPlugin;
 
-impl Plugin for LoadingPlugin {
+impl Plugin for AssetLoadingPlugin {
     fn build(&self, app: &mut App) {
 
         app.add_loading_state(

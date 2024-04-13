@@ -20,7 +20,7 @@ bevy = {version = "0.12.1", features = [
     "multi-threaded",
     "png",
     "hdr",
-    "wayland",
+    "x11",
     "bevy_gizmos",
     "tonemapping_luts",
     "default_font",
@@ -28,7 +28,7 @@ bevy = {version = "0.12.1", features = [
 ] }
 bevy_asset_loader = "0.19.1"
 bevy_render = "0.12.1"
-catppuccin = "2.2.0"
+catppuccin = "1.4.0"
 image = { version = "0.24", default-features = false }
 winit = { version = "0.28.7", default-features = false }
 

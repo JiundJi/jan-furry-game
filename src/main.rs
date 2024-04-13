@@ -36,7 +36,7 @@ fn set_window_icon(
 
     let primary_entity = primary_window.single();
     let Some(primary) = windows.get_window(primary_entity) else {
-      return;
+        return;
     };
 
     let icon_buf = Cursor::new(include_bytes!("../assets/jan bw.png"));
