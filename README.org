@@ -9,8 +9,6 @@ and then run
 
 alternatively, drop in the dev shell using ~nix develop~ and use [[https://rustup.rs/][cargo]] as usual ~cargo run~
 
-alternatively, just use [[https://rustup.rs/][cargo]] ~cargo run~
-
 and enjoy your binary presumably as =./result/bin/jan-furry-game=
 
 
