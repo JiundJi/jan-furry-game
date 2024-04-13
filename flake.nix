@@ -2,7 +2,7 @@
   description = "Haskell, Haskell über Alles";
   inputs = {
     nixpkgs = {
-      url = "github:NixOS/nixpkgs/23.11";
+      url = "github:NixOS/nixpkgs/nixos-unstable";
     };
   };
   outputs = {self, nixpkgs, ...}:
@@ -12,5 +12,6 @@
     in
       {
         packages.${system}.default = pkgs.callPackage ./default.nix { inherit system; };
+        devShells.${system}.default = pkgs.callPackage ./shell.nix {inherit pkgs;};
       };
 }

@@ -6,6 +6,8 @@ with pkgs;
 mkShell rec {
   nativeBuildInputs = [
     pkg-config
+    cargo
+    rustc
   ];
   buildInputs = [
     udev alsa-lib vulkan-loader

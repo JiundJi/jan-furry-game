@@ -5,7 +5,9 @@ A game about werewolfs
 install the [[https://nixos.org/download/][best package manager]] to ever exist
 
 and then run
-~nix build~
+~nix build~ *doesn't work yet*
+
+alternatively, drop in the dev shell using ~nix develop~ and use [[https://rustup.rs/][cargo]] as usual ~cargo run~
 
 alternatively, just use [[https://rustup.rs/][cargo]] ~cargo run~
 
