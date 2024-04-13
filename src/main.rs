@@ -4,6 +4,7 @@
 use std::io::Cursor;
 use bevy::asset::AssetMetaCheck;
 use bevy::prelude::*;
+use bevy::transform::commands;
 use bevy::window::PrimaryWindow;
 use bevy::winit::WinitWindows;
 use winit::window::Icon;
@@ -26,7 +27,12 @@ fn main() {
         )
         .add_plugins(GamePlugin)
         .add_systems(Startup, set_window_icon)
+        .add_systems(Startup, add_camera)
         .run();
+}
+
+fn add_camera(mut commands: Commands) {
+    commands.spawn(Camera2dBundle::default());
 }
 
 fn set_window_icon(

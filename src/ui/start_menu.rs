@@ -7,7 +7,7 @@ pub struct StartMenuPlugin;
 impl Plugin for StartMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::MainMenu), setup)
-        .add_systems(Update, click_settings.run_if(in_state(GameState::Settings)))
+        .add_systems(Update, click_settings.run_if(in_state(GameState::MainMenu)))
         .add_systems(Update, click_play.run_if(in_state(GameState::MainMenu)))
         .add_systems(OnExit(GameState::MainMenu), cleanup);
     }
@@ -15,11 +15,9 @@ impl Plugin for StartMenuPlugin {
 }
 
 #[derive(Component)] struct Menu;
-#[derive(Component)] struct Settings;
 
 
 fn setup(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
 
     commands
         .spawn((
@@ -113,25 +111,10 @@ fn click_play(
 fn click_settings(
     mut next_state: ResMut<NextState<GameState>>,
     mut interaction_query: Query<(&Interaction, &mut BackgroundColor, &ButtonColors), (Changed<Interaction>, With<Button>)>,
-    mut commands: Commands,
 ) {
     for (interaction, mut color, button_colors) in &mut interaction_query {
         match *interaction {
-            Interaction::Pressed => { 
-                commands.spawn((
-                    NodeBundle {
-                        style: Style {
-                            width: Val::Percent(50.0),
-                            height: Val::Percent(50.0),
-
-                            ..Default::default()
-                        },
-
-                        ..default()
-                    },
-                    Settings
-                ));
-            },
+            Interaction::Pressed => { next_state.set(GameState::Settings) },
             Interaction::Hovered => { *color = button_colors.hovered.into() },
             Interaction::None => { *color = button_colors.normal.into() },
         }
