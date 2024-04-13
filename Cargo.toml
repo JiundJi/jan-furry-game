@@ -3,6 +3,36 @@ name = "jan-furry-game"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+bevy = {version = "0.12.1", features = [
+    "animation",
+    "bevy_asset",
+    "bevy_gilrs",
+    "bevy_scene",
+    "bevy_winit",
+    "bevy_core_pipeline",
+    "bevy_pbr",
+    "bevy_gltf",
+    "bevy_render",
+    "bevy_sprite",
+    "bevy_text",
+    "bevy_ui",
+    "multi-threaded",
+    "png",
+    "hdr",
+    "x11",
+    "bevy_gizmos",
+    "tonemapping_luts",
+    "default_font",
+    "webgl2",
+] }
+bevy_asset_loader = "0.19.1"
+bevy_render = "0.12.1"
+bevy_text_popup = "0.2.0"
+catppuccin = "1.4.0"
+image = { version = "0.24", default-features = false }
+winit = { version = "0.28.7", default-features = false }
+
+[lints.clippy]
+nursery = "deny"
+pendantic = "deny"
