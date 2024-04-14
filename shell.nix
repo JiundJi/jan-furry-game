@@ -1,18 +1,5 @@
-# see https://github.com/bevyengine/bevy/blob/main/docs/linux_dependencies.md#nix
-{ pkgs ? import <nixpkgs> { } }:
+{ system ? builtins.currentSystem
+, pkgs ? import <nixpkgs> { inherit system; config = {}; overlays = []; }
+}:
 
-with pkgs;
-
-mkShell rec {
-  nativeBuildInputs = [
-    pkg-config
-    cargo
-    rustc
-  ];
-  buildInputs = [
-    udev alsa-lib vulkan-loader
-    xorg.libX11 xorg.libXcursor xorg.libXi xorg.libXrandr # To use the x11 feature
-    libxkbcommon wayland # To use the wayland feature
-  ];
-  LD_LIBRARY_PATH = lib.makeLibraryPath buildInputs;
-}
+(import ./default.nix {inherit system pkgs;}).shell
