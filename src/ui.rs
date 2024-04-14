@@ -1,11 +1,13 @@
 mod start_menu;
 mod settings_menu;
+mod lobby_menu;
 
 use bevy::prelude::*;
 use catppuccin::Flavour;
 
 use self::start_menu::StartMenuPlugin;
 use self::settings_menu::SettingsMenuPlugin;
+use self::lobby_menu::LobbyMenuPlugin;
 
 const FLAVOUR: Flavour = Flavour::Mocha;
 
@@ -13,7 +15,7 @@ pub struct UiPlugin;
 
 impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((StartMenuPlugin, SettingsMenuPlugin));
+        app.add_plugins((StartMenuPlugin, SettingsMenuPlugin, LobbyMenuPlugin));
     }
 }
 

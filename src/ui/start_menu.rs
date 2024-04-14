@@ -144,7 +144,8 @@ fn button_system(
     }
 }
 
-fn menu_action(interaction_query: Query<
+fn menu_action(
+    interaction_query: Query<
     (&Interaction, &MenuButtonAction),
     (Changed<Interaction>, With<Button>),
     >,

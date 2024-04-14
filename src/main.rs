@@ -44,7 +44,7 @@ fn set_window_icon(
         return;
     };
 
-    let icon_buf = Cursor::new(include_bytes!("../assets/jan bw.png"));
+    let icon_buf = Cursor::new(include_bytes!("../assets/images/jan bw.png"));
 
     if let Ok(image) = image::load(icon_buf, image::ImageFormat::Png) {
         let image = image.into_rgba8();
