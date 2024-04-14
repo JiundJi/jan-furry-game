@@ -20,6 +20,7 @@ impl Plugin for LobbyMenuPlugin {
 #[derive(Component)] struct Menu;
 #[derive(Component)] struct Lobby;
 
+#[derive(Component)] struct SelectedOption;
 #[derive(Component)] enum Button {
     Quit,
     Start,
@@ -51,7 +52,7 @@ fn setup(mut commands: Commands, font_assets: Res<FontAssets>) {
             },
             Menu,
         ))
-        .with_children(|c| { // * exit button
+        .with_children(|c| { // * quit button
             c.spawn((
                 ButtonBundle {
                     style: Style {
@@ -64,7 +65,7 @@ fn setup(mut commands: Commands, font_assets: Res<FontAssets>) {
                     background_color: BackgroundColor::from(general_colors.red),
                     ..Default::default()
                 },
-                button_colors,
+                button_colors, Button::Quit
             ))
             .with_children(|p| {
                 p.spawn(
@@ -99,7 +100,7 @@ fn setup(mut commands: Commands, font_assets: Res<FontAssets>) {
                         font_size: 24.0
                     },
                     inactive: true,
-                }
+                }, general_colors
             ));
         })
         .with_children(|c| { // * start button
@@ -119,7 +120,7 @@ fn setup(mut commands: Commands, font_assets: Res<FontAssets>) {
                     background_color: BackgroundColor::from(button_colors.normal),
                     ..Default::default()
                 },
-                button_colors,
+                button_colors, Button::Start
             ))
             .with_children(|parent| {
                 parent.spawn(TextBundle::from_section(
@@ -160,6 +161,24 @@ fn text_input_listener(mut events: EventReader<TextInputSubmitEvent>) {
         
     }
 }
+
+fn button_system(
+    mut interaction_query: Query<
+    (&Interaction, &mut BackgroundColor, Option<&SelectedOption>), 
+    (Changed<Interaction>, With<Button>),
+    >,
+) {
+    let colors = ButtonColors::default();
+    for (interaction, mut color, selected) in &mut interaction_query {
+        *color = BackgroundColor::from(match (*interaction, selected) {
+            (Interaction::Pressed, _) => colors.normal,
+            (Interaction::Hovered, None) => colors.hovered,
+            (Interaction::Hovered, Some(_)) => colors.clicked,
+            (Interaction::None, _) => colors.normal,
+        })
+    }
+}
+
 
 fn cleanup(mut commands: Commands, menu: Query<Entity, With<Menu>>) {
     for e in menu.iter()  {
