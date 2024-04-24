@@ -1,11 +1,13 @@
 mod start_menu;
 mod settings_menu;
+mod lobby_menu;
 
 use bevy::prelude::*;
 use catppuccin::Flavour;
 
 use self::start_menu::StartMenuPlugin;
 use self::settings_menu::SettingsMenuPlugin;
+use self::lobby_menu::LobbyMenuPlugin;
 
 const FLAVOUR: Flavour = Flavour::Mocha;
 
@@ -13,12 +15,12 @@ pub struct UiPlugin;
 
 impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((StartMenuPlugin, SettingsMenuPlugin));
+        app.add_plugins((StartMenuPlugin, SettingsMenuPlugin, LobbyMenuPlugin));
     }
 }
 
 #[derive(Component)]
-    pub struct GeneralUi {
+pub struct GeneralUi {
         pub text: Color,
         pub subtext1: Color,
         pub subtext0: Color,
@@ -84,13 +86,13 @@ impl Default for GeneralUi {
 }
 
 #[derive(Component)]
-    pub struct ButtonColors {
-        pub normal: Color,
-        pub important: Color,
-        pub green: Color,
-        pub red: Color,
-        pub hovered: Color,
-        pub clicked: Color,
+pub struct ButtonColors {
+    pub normal: Color,
+    pub important: Color,
+    pub green: Color,
+    pub red: Color,
+    pub hovered: Color,
+    pub clicked: Color,
 }
 
 impl Default for ButtonColors {
@@ -102,6 +104,56 @@ impl Default for ButtonColors {
             green: Color::hex(FLAVOUR.green().hex()).unwrap(),
             red: Color::hex(FLAVOUR.red().hex()).unwrap(),
             clicked: Color::hex(FLAVOUR.overlay2().hex()).unwrap(),
+        }
+    }
+}
+
+
+
+
+#[derive(Resource)]
+pub struct ButtonStyle {
+    bundle: ButtonBundle,
+    colors: ButtonColors,
+    text: TextStyle,
+}
+
+impl ButtonStyle {
+
+    fn long() -> ButtonStyle {
+        ButtonStyle {
+            bundle: ButtonBundle {
+                style: Style {
+                    width: Val::Vw(12.),
+                    height: Val::Vh(6.),
+                    ..Default::default()
+                },
+                background_color: BackgroundColor::from(ButtonColors::default().normal),
+                ..Default::default()
+            },
+            colors: ButtonColors::default(),
+            text: TextStyle {
+                font_size: 32.,
+                color: GeneralUi::default().text,
+                ..Default::default()
+            }
+        }
+    }
+    fn smol_quadratic() -> ButtonStyle {
+        ButtonStyle {
+            bundle: ButtonBundle {
+                style: Style {
+                    width: Val::Vw(4.),
+                    height: Val::Vh(4.),
+                    ..Default::default()
+                },
+                ..Default::default()
+            },
+            colors: ButtonColors::default(),
+            text: TextStyle {
+
+                ..Default::default()
+            }
         }
     }
 }

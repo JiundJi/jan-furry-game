@@ -6,15 +6,16 @@ mod ui;
 
 use bevy::prelude::*;
 #[cfg(debug_assertions)] use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
+use bevy_simple_text_input::TextInputPlugin;
 use bevy_text_popup::TextPopupPlugin;
 use crate::ui::UiPlugin;
 use crate::asset_loading::AssetLoadingPlugin;
 
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash, Default)]
-pub enum GameState {
-        Loading,
+pub enum AppState {
+        #[default] Loading,
         Settings,
-        #[default] MainMenu,
+        MainMenu,
         CreationMenu,
         Lobby,
         InGame,
@@ -24,8 +25,8 @@ pub enum GameState {
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.add_state::<GameState>()
-            .add_plugins((AssetLoadingPlugin, UiPlugin, TextPopupPlugin));
+        app.add_state::<AppState>()
+            .add_plugins((AssetLoadingPlugin, UiPlugin, TextPopupPlugin, TextInputPlugin));
 
         #[cfg(debug_assertions)]
         {

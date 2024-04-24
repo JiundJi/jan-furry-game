@@ -1,22 +1,12 @@
+use bevy::ecs::component::Component;
 
 
-pub struct Player {
-    name: String,
-    card: Card,
-
-}
-
-pub struct Card {
-    role: Role,
-    
-}
-
-pub enum Role {
+#[derive(Default, PartialEq, Clone, Component)] pub enum Role {
     Werwolf,
     Dorfbewohner,
     Hexe,
     Amor,
     Dorfmatratze,
     Jaeger,
-
+    #[default] None,
 }

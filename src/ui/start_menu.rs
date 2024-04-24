@@ -1,16 +1,16 @@
 use bevy::app::AppExit;
 use bevy::prelude::*;
-use crate::GameState;
+use crate::AppState;
 use crate::ui::*;
 
 pub struct StartMenuPlugin;
 
 impl Plugin for StartMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::MainMenu), setup)
-        .add_systems(Update, button_system.run_if(in_state(GameState::MainMenu)))
-        .add_systems(Update, menu_action.run_if(in_state(GameState::MainMenu)))
-        .add_systems(OnExit(GameState::MainMenu), cleanup);
+        app.add_systems(OnEnter(AppState::MainMenu), setup)
+        .add_systems(Update, button_system.run_if(in_state(AppState::MainMenu)))
+        .add_systems(Update, menu_action.run_if(in_state(AppState::MainMenu)))
+        .add_systems(OnExit(AppState::MainMenu), cleanup);
     }
 }
 
@@ -22,8 +22,11 @@ impl Plugin for StartMenuPlugin {
 
 #[derive(Component)] struct SelectedOption;
 #[derive(Component)] struct Menu;
+#[derive(Component)] struct Me;
+
 
 fn setup(mut commands: Commands) {
+
 
     commands
         .spawn((
@@ -144,11 +147,12 @@ fn button_system(
     }
 }
 
-fn menu_action(interaction_query: Query<
+fn menu_action(
+    interaction_query: Query<
     (&Interaction, &MenuButtonAction),
     (Changed<Interaction>, With<Button>),
     >,
-    mut next_state: ResMut<NextState<GameState>>,
+    mut next_state: ResMut<NextState<AppState>>,
     mut exit: EventWriter<AppExit>,
 ) {
 
@@ -156,10 +160,10 @@ fn menu_action(interaction_query: Query<
         if *interaction == Interaction::Pressed {
             match menu_button_action {
                 MenuButtonAction::Play => {
-                    next_state.set(GameState::Lobby)
+                    next_state.set(AppState::Lobby)
                 },
                 MenuButtonAction::Settings => {
-                    next_state.set(GameState::Settings)
+                    next_state.set(AppState::Settings)
                 },
                 MenuButtonAction::Quit => {
                     exit.send(AppExit);

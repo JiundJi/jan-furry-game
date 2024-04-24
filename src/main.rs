@@ -18,7 +18,7 @@ fn main() {
             DefaultPlugins
                 .set(WindowPlugin {
                     primary_window: Some(Window {
-                        title: String::from("test :3"),
+                        title: String::from("furry game"),
                         ..Default::default()
                     }),
                     ..default()
@@ -44,7 +44,7 @@ fn set_window_icon(
         return;
     };
 
-    let icon_buf = Cursor::new(include_bytes!("../assets/jan bw.png"));
+    let icon_buf = Cursor::new(include_bytes!("../assets/images/jan bw.png"));
 
     if let Ok(image) = image::load(icon_buf, image::ImageFormat::Png) {
         let image = image.into_rgba8();

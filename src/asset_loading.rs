@@ -1,4 +1,4 @@
-use crate::GameState;
+use crate::AppState;
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
@@ -8,19 +8,19 @@ impl Plugin for AssetLoadingPlugin {
     fn build(&self, app: &mut App) {
 
         app.add_loading_state(
-            LoadingState::new(GameState::Loading)
-                .continue_to_state(GameState::MainMenu)
+            LoadingState::new(AppState::Loading)
+                .continue_to_state(AppState::MainMenu)
                 .load_collection::<FontAssets>()
                 .load_collection::<AudioAssets>()
-                .load_collection::<TextureAssets>()
+                .load_collection::<ImageAssets>()
         );
     }
 }
 
 #[derive(AssetCollection, Resource)]
     pub struct FontAssets {
-        #[asset(path = "fonts/FiraSans-Bold.ttf")]
-            pub fira_sans: Handle<Font>,
+        #[asset(path = "fonts/JetBrainsMono-Regular.ttf")]
+            pub jbmono_regular: Handle<Font>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -29,7 +29,7 @@ impl Plugin for AssetLoadingPlugin {
 }
 
 #[derive(AssetCollection, Resource)]
-    pub struct TextureAssets {
-        #[asset(path = "textures/pointy_hex_tiles.png")]
-            pub grassland: Handle<Image>,
+    pub struct ImageAssets {
+        #[asset(path = "images/jan bw.png")]
+            pub icon: Handle<Image>,
 }
