@@ -1,18 +1,16 @@
 use bevy::prelude::*;
 use crate::asset_loading::FontAssets;
-use crate::game::Game;
-use crate::GameState;
-use crate::ui::*;
+use crate::{ui::*, AppState};
 use bevy_simple_text_input::*;
 
 pub struct LobbyMenuPlugin;
 
 impl Plugin for LobbyMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::Lobby), setup)
-        .add_systems(Update, click.run_if(in_state(GameState::Lobby)))
-        .add_systems(Update, text_input_listener.run_if(in_state(GameState::Lobby)))
-        .add_systems(OnExit(GameState::Lobby), cleanup);
+        app.add_systems(OnEnter(AppState::Lobby), setup)
+        .add_systems(Update, click.run_if(in_state(AppState::Lobby)))
+        .add_systems(Update, text_input_listener.run_if(in_state(AppState::Lobby)))
+        .add_systems(OnExit(AppState::Lobby), cleanup);
     }
 
 }
@@ -32,17 +30,13 @@ impl Plugin for LobbyMenuPlugin {
 
 fn setup(mut commands: Commands, font_assets: Res<FontAssets>) {
 
-    let general_colors = GeneralUi::default();
-    let button_colors = ButtonColors::default();
-
-    commands.spawn((Game::default(), Lobby));
-
+    
     commands
         .spawn((
             NodeBundle {
                 style: Style {
-                    width: Val::Percent(100.0),
-                    height: Val::Percent(100.0),
+                    width: Val::Percent(100.),
+                    height: Val::Percent(100.),
                     flex_direction: FlexDirection::Column,
                     align_items: AlignItems::Center,
                     justify_content: JustifyContent::Center,
@@ -53,40 +47,21 @@ fn setup(mut commands: Commands, font_assets: Res<FontAssets>) {
             Menu,
         ))
         .with_children(|c| { // * quit button
+            let meow = ButtonStyle::smol_quadratic();
             c.spawn((
-                ButtonBundle {
-                    style: Style {
-                        width: Val::Vw(6.0),
-                        height: Val::Vh(6.0),
-                        justify_content: JustifyContent::Center,
-                        align_content: AlignContent::Center,
-                        ..default()
-                    },
-                    background_color: BackgroundColor::from(general_colors.red),
-                    ..Default::default()
-                },
-                button_colors, Button::Quit
-            ))
+                meow.bundle, meow.colors, Button::Quit))
             .with_children(|p| {
-                p.spawn(
-            TextBundle::from_section(
-                "X", 
-                TextStyle{
-                        font_size: 32.0, 
-                        color: general_colors.text, 
-                        ..default()
-                        }
-                    )
-                );
-            });
+                p.spawn(TextBundle::from_section("X", meow.text));});
+                
         })
         .with_children(|c| { // * text input
+            let general_colors = GeneralUi::default();
             c.spawn((
                 NodeBundle {
                     style: Style {
-                        width: Val::Px(200.0),
-                        border: UiRect::all(Val::Px(2.0)),
-                        padding: UiRect::all(Val::Px(5.0)),
+                        width: Val::Px(200.),
+                        border: UiRect::all(Val::Px(2.)),
+                        padding: UiRect::all(Val::Px(5.)),
                         ..default()
                     },
                     border_color: BorderColor(general_colors.mantle),
@@ -97,43 +72,34 @@ fn setup(mut commands: Commands, font_assets: Res<FontAssets>) {
                     text_style: TextStyle {
                         color: general_colors.text,
                         font: font_assets.jbmono_regular.clone(),
-                        font_size: 24.0
+                        font_size: 24.
                     },
                     inactive: true,
                 }, general_colors
             ));
         })
-        .with_children(|c| { // * start button
-            let button_colors = ButtonColors::default();
-            let general_colors = GeneralUi::default();
-
+        .with_children(|c| { // * join button
+            let meow = ButtonStyle::long();
             c.spawn((
-                ButtonBundle {
-                    style: Style {
-                        width: Val::Vw(12.0),
-                        height: Val::Vh(6.0),
-                        justify_content: JustifyContent::Center,
-                        align_items: AlignItems::Center,
+                meow.bundle, meow.colors, Button::Join))
+            .with_children(|p| {
+                p.spawn(TextBundle::from_section("Join Game", meow.text));});
 
-                        ..Default::default()
-                    },
-                    background_color: BackgroundColor::from(button_colors.normal),
-                    ..Default::default()
-                },
-                button_colors, Button::Start
-            ))
-            .with_children(|parent| {
-                parent.spawn(TextBundle::from_section(
-                    "Start", 
-                    TextStyle {
-                        font_size: 32.0, 
-                        color: general_colors.text, 
-                        ..Default::default()
-                    }
-                ));
-            });
+        })
+        .with_children(|c| { // * leave button
+            let meow = ButtonStyle::long();
+            c.spawn((
+                meow.bundle, meow.colors, Button::Leave
+                ))
+                .with_children(|p|{
+                    p.spawn(TextBundle::from_section("Leave", meow.text));
+                });
+        })
+        .with_children(|c| { // * start button
+            let meow = ButtonStyle::long();
+            c.spawn((meow.bundle, meow.colors, Button::Start))
+            .with_children(|p| {p.spawn(TextBundle::from_section("Start", meow.text));});
         });
-
 }
 
 fn click(
@@ -141,13 +107,13 @@ fn click(
         (&Interaction, &Button),
         (Changed<Interaction>, With<Button>),
     >,
-    mut next_state: ResMut<NextState<GameState>>,
+    mut next_state: ResMut<NextState<AppState>>,
 ) {
     for (interaction, button) in &interaction_query {
         if *interaction == Interaction::Pressed {
             match button {
-                Button::Quit => { next_state.set(GameState::MainMenu) },
-                Button::Start => { next_state.set(GameState::InGame) },
+                Button::Quit => { next_state.set(AppState::MainMenu) },
+                Button::Start => { next_state.set(AppState::InGame) },
                 Button::Join => todo!(),
                 Button::Leave => todo!(),
                 Button::Remove => todo!(),

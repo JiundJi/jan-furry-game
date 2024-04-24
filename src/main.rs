@@ -18,7 +18,7 @@ fn main() {
             DefaultPlugins
                 .set(WindowPlugin {
                     primary_window: Some(Window {
-                        title: String::from("test :3"),
+                        title: String::from("furry game"),
                         ..Default::default()
                     }),
                     ..default()

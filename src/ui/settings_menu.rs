@@ -1,14 +1,14 @@
 use bevy::prelude::*;
-use crate::GameState;
+use crate::AppState;
 use crate::ui::*;
 
 pub struct SettingsMenuPlugin;
 
 impl Plugin for SettingsMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::Settings), setup)
-        .add_systems(Update, click_exit.run_if(in_state(GameState::Settings)))
-        .add_systems(OnExit(GameState::Settings), cleanup);
+        app.add_systems(OnEnter(AppState::Settings), setup)
+        .add_systems(Update, click_exit.run_if(in_state(AppState::Settings)))
+        .add_systems(OnExit(AppState::Settings), cleanup);
     }
 
 }
@@ -64,12 +64,12 @@ fn setup(mut commands: Commands) {
 }
 
 fn click_exit(
-    mut next_state: ResMut<NextState<GameState>>,
+    mut next_state: ResMut<NextState<AppState>>,
     mut interaction_query: Query<(&Interaction, &mut BackgroundColor, &ButtonColors), (Changed<Interaction>, With<Button>)>,
 ) {
     for (interaction, mut color, button_colors) in &mut interaction_query {
         match *interaction {
-            Interaction::Pressed => { next_state.set(GameState::MainMenu) },
+            Interaction::Pressed => { next_state.set(AppState::MainMenu) },
             Interaction::Hovered => { *color = button_colors.hovered.into() },
             Interaction::None => { *color = button_colors.red.into() },
         }

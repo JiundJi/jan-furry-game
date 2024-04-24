@@ -1,54 +1,61 @@
-use std::time::SystemTime;
+use std::{collections::HashMap, time::SystemTime};
 use bevy::ecs::component::Component;
 
-use crate::logic::*;
+type PlayerId = u64;
 
-#[derive(Component)] pub struct Game {
-    players: Vec<Player>,
+#[derive(Component)]
+pub struct GameState {
+    players: HashMap<PlayerId, String>,
+    history: Vec<GameEvent>,
     creation_time: SystemTime,
     start_time: SystemTime,
 }
 
-impl Default for Game {
-    fn default() -> Self {
-        Self {
-            players: vec![],
-            creation_time: SystemTime::now(),
-            start_time: SystemTime::now(),
+#[derive(Clone)]
+pub enum GameEvent {
+    PlayerJoined { player_id: PlayerId, name: String },
+    PlayerLeft(PlayerId), 
+}
+
+
+impl GameState {
+    pub fn reduce(&mut self, event: &GameEvent) {
+        use GameEvent::*;
+        
+        match event {
+            PlayerJoined { player_id, name } => {
+                self.players.insert(*player_id, name.to_string());
+            },
+            PlayerLeft (player_id) => {
+                self.players.remove(player_id);
+            },
+
         }
+        self.history.push(event.clone());
+    }
+
+    pub fn validate(&self, event: &GameEvent) -> bool {
+        use GameEvent::*;
+
+        match event {
+            PlayerJoined { player_id, name } => {
+                if self.players.contains_key(player_id) {
+                    return false;
+                }
+            },
+            PlayerLeft(player_id) => {  },
+        }
+
+        true
+    }
+
+    pub fn dispatch(&mut self, event: &GameEvent) -> Result<(), ()> {
+        if !self.validate(event) {
+            return Err(());
+        }
+
+        self.reduce(event);
+        Ok(())
     }
 }
 
-impl Game {
-    fn remove_player(&self, p: Player) -> Self {
-        let mut players: Vec<Player> = vec![];
-
-        for i in self.players.iter() {
-            if i != &p {
-                players.push(i.clone());
-            }
-        }
-
-        Self {
-            players,
-            creation_time: self.creation_time,
-            start_time: self.start_time,
-        }
-    }
-
-    fn add_player(&self, p: Player) -> Self {
-        let mut players: Vec<Player> = vec![];
-
-        for i in self.players.iter() {
-            players.push(i.clone());
-        }
-
-        players.push(p);
-
-        Self {
-            players,
-            creation_time: self.creation_time,
-            start_time: self.start_time,
-        }
-    }
-}

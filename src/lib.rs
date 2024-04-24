@@ -12,7 +12,7 @@ use crate::ui::UiPlugin;
 use crate::asset_loading::AssetLoadingPlugin;
 
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash, Default)]
-pub enum GameState {
+pub enum AppState {
         #[default] Loading,
         Settings,
         MainMenu,
@@ -25,7 +25,7 @@ pub enum GameState {
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.add_state::<GameState>()
+        app.add_state::<AppState>()
             .add_plugins((AssetLoadingPlugin, UiPlugin, TextPopupPlugin, TextInputPlugin));
 
         #[cfg(debug_assertions)]
