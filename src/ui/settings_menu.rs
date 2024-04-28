@@ -13,54 +13,38 @@ impl Plugin for SettingsMenuPlugin {
 
 }
 
+#[derive(Component)]
+enum Button {
+    Exit,
+
+}
+
 #[derive(Component)] struct Menu;
 
 fn setup(mut commands: Commands) {
-
-    let button_colors = ButtonColors::default();
     let general_colors = GeneralUi::default();
-                commands.spawn((
-                    NodeBundle {
-                        style: Style {
-                            width: Val::Percent(60.0),
-                            height: Val::Percent(70.0),
-                            align_self: AlignSelf::Center,
-                            
-                            ..Default::default()
-                        },
-                        background_color: BackgroundColor::from(general_colors.overlay0),
-                        ..default()
-                    },
-                    Menu
-                ))
-                .with_children(|c| {
-                    c.spawn((
-                        ButtonBundle {
-                            style: Style {
-                                width: Val::Vw(6.0),
-                                height: Val::Vh(6.0),
-                                justify_content: JustifyContent::Center,
-                                align_content: AlignContent::Center,
-                                ..default()
-                            },
-                            background_color: BackgroundColor::from(general_colors.red),
-                            ..Default::default()
-                        },
-                        button_colors,
-                    ))
-                    .with_children(|p| {
-                        p.spawn(
-                    TextBundle::from_section(
-                        "X", 
-                        TextStyle{
-                                font_size: 32.0, 
-                                color: general_colors.text, 
-                                ..default()
-                                }
-                            )
-                        );
-                    });
-                });
+    commands.spawn((
+        NodeBundle {
+            style: Style {
+                width: Val::Percent(60.0),
+                height: Val::Percent(70.0),
+                align_self: AlignSelf::Center,
+                
+                ..Default::default()
+            },
+            background_color: BackgroundColor::from(general_colors.overlay0),
+            ..default()
+        },
+        Menu
+    ))
+    .with_children(|c| {
+        let meow = ButtonStyle::x();
+        c.spawn((
+            meow.bundle, meow.colors, Button::Exit
+        ))
+        .with_children(|p| {
+            p.spawn(TextBundle::from_section("X", meow.text));});
+    });
 }
 
 fn click_exit(

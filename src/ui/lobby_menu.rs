@@ -9,6 +9,7 @@ impl Plugin for LobbyMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(AppState::Lobby), setup)
         .add_systems(Update, click.run_if(in_state(AppState::Lobby)))
+        .add_systems(Update, button_system.run_if(in_state(AppState::Lobby)))
         .add_systems(Update, text_input_listener.run_if(in_state(AppState::Lobby)))
         .add_systems(OnExit(AppState::Lobby), cleanup);
     }
@@ -19,7 +20,8 @@ impl Plugin for LobbyMenuPlugin {
 #[derive(Component)] struct Lobby;
 
 #[derive(Component)] struct SelectedOption;
-#[derive(Component)] enum Button {
+#[derive(Component)] struct NameInput;
+#[derive(Component, PartialEq)] enum Button {
     Quit,
     Start,
     Join,
@@ -28,9 +30,7 @@ impl Plugin for LobbyMenuPlugin {
 }
 
 
-fn setup(mut commands: Commands, font_assets: Res<FontAssets>) {
-
-    
+fn setup(mut commands: Commands, font_assets: Res<FontAssets>) {    
     commands
         .spawn((
             NodeBundle {
@@ -47,12 +47,11 @@ fn setup(mut commands: Commands, font_assets: Res<FontAssets>) {
             Menu,
         ))
         .with_children(|c| { // * quit button
-            let meow = ButtonStyle::smol_quadratic();
+            let meow = ButtonStyle::x();
             c.spawn((
                 meow.bundle, meow.colors, Button::Quit))
             .with_children(|p| {
                 p.spawn(TextBundle::from_section("X", meow.text));});
-                
         })
         .with_children(|c| { // * text input
             let general_colors = GeneralUi::default();
@@ -75,7 +74,7 @@ fn setup(mut commands: Commands, font_assets: Res<FontAssets>) {
                         font_size: 24.
                     },
                     inactive: true,
-                }, general_colors
+                }, general_colors, NameInput,
             ));
         })
         .with_children(|c| { // * join button
@@ -98,8 +97,8 @@ fn setup(mut commands: Commands, font_assets: Res<FontAssets>) {
         .with_children(|c| { // * start button
             let meow = ButtonStyle::long();
             c.spawn((meow.bundle, meow.colors, Button::Start))
-            .with_children(|p| {p.spawn(TextBundle::from_section("Start", meow.text));});
-        });
+            .with_children(|p| {p.spawn(TextBundle::from_section("Start", meow.text));});}
+    );
 }
 
 fn click(
@@ -124,23 +123,31 @@ fn click(
 
 fn text_input_listener(mut events: EventReader<TextInputSubmitEvent>) {
     for event in events.read() {
-        
+        info!("{:?} submitted: {}", event.entity, event.value);
+        todo!();
     }
 }
 
 fn button_system(
     mut interaction_query: Query<
-    (&Interaction, &mut BackgroundColor, Option<&SelectedOption>), 
+    (&Interaction, &mut BackgroundColor, Option<&SelectedOption>, &Button), 
     (Changed<Interaction>, With<Button>),
     >,
 ) {
-    let colors = ButtonColors::default();
-    for (interaction, mut color, selected) in &mut interaction_query {
+    for (interaction, mut color, selected, button) in &mut interaction_query {
+        let button_type = match button {
+                    Button::Quit => ButtonStyle::x(),
+                    Button::Start => ButtonStyle::long(),
+                    Button::Join => ButtonStyle::long(),
+                    Button::Leave => ButtonStyle::long(),
+                    Button::Remove => ButtonStyle::smol_quadratic(),
+                };
+        
         *color = BackgroundColor::from(match (*interaction, selected) {
-            (Interaction::Pressed, _) => colors.normal,
-            (Interaction::Hovered, None) => colors.hovered,
-            (Interaction::Hovered, Some(_)) => colors.clicked,
-            (Interaction::None, _) => colors.normal,
+            (Interaction::Pressed, _) => button_type.colors.normal,
+            (Interaction::Hovered, None) => button_type.colors.hovered,
+            (Interaction::Hovered, Some(_)) => button_type.colors.clicked,
+            (Interaction::None, _) => button_type.colors.normal,
         })
     }
 }

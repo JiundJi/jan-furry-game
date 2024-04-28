@@ -156,4 +156,25 @@ impl ButtonStyle {
             }
         }
     }
+
+    fn x() -> ButtonStyle {
+        ButtonStyle {
+            bundle: ButtonBundle {
+                style: Style {
+                    width: Val::Vw(4.),
+                    height: Val::Vh(4.),
+                    ..Default::default()
+                },
+                background_color: BackgroundColor::from(GeneralUi::default().red),
+                ..Default::default()
+            },
+            colors: ButtonColors::default(),
+            text: TextStyle {
+                font_size: 32.,
+                ..Default::default()
+            }
+        }
+    }
+
+    
 }
